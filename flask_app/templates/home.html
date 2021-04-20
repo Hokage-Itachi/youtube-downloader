@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <script src="{{url_for('static', filename='js/script.js')}}"></script>
+    <title>Youtube Downloader</title>
+</head>
+<body>
+<div class="label-container">
+    <p class="label">Youtube Downloader</p>
+</div>
+<div class="main-container">
+    <div class="option-bar">
+        <ul>
+            <li class="active" id="single_download" onclick="openTab('single_download')">
+                <p>Tải xuống video</p>
+            </li>
+            <li id="playlist_download" onclick="openTab('playlist_download')">
+                <p>Tải xuống playlist</p>
+            </li>
+            <li id="channel_download" onclick="openTab('channel_download')">
+                <p>Tải xuống channel</p>
+            </li>
+        </ul>
+    </div>
+    <div class="download-container">
+        <div class="single-download-container" id="single_download_container">
+            <form action="/video_download" method="POST">
+                <div class="input-container">
+                    <div class="input-text-container">
+                        <label for="video_url">Nhập link video</label>
+                        <br>
+                        <input type="text" id="video_url" name="video_url" onchange="getResolution()" required>
+                    </div>
+                    <div class="select-container">
+                        <label for="res">Chất lượng</label>
+                        <br>
+                        <select name="resolution" id="resolution" required>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <input class="download-button" type="submit" value="Tải xuống">
+                </div>
+                <div class="message-container">
+                    <p id="message"></p>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="playlist-download-container" id="playlist_download_container">
+
+        </div>
+        <div class="channel-download-container" id="channel_download_container">
+
+        </div>
+
+    </div>
+</div>
+<script>
+
+</script>
+</body>
+</html>
