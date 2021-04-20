@@ -1,0 +1,177 @@
+body {
+    background-color: #ff6666;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+/*------------------*/
+.label-container {
+    height: 100px;
+}
+
+.label {
+    font-size: 50px;
+    text-align: center;
+    margin-left: 200px;
+    margin-right: 200px;
+    color: white;
+    letter-spacing: 3px;
+}
+/*------------------*/
+
+.option-bar {
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+i {
+    color: #006666;
+}
+
+.option-bar ul {
+    display: flex; /* Display content horizontally */
+    justify-content: space-around; /* Adjust content space */
+    background-color: #006666;
+    margin: 0;
+    padding: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.option-bar ul :hover {
+    /*display: flex; !* Display content horizontally *!*/
+    justify-content: space-around; /* Adjust content space */
+    background-color: rgb(50, 50, 50);
+    /*margin-top: 0;*/
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+
+.option-bar ul li {
+    list-style: none;
+}
+
+.option-bar ul li p {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    padding: 0 55px;
+}
+/*------------------*/
+
+.main-container {
+    margin: 0 250px 0 250px;
+    /*border: 1px solid black;*/
+    box-shadow: 5px 5px 10px #888888;
+    border-radius: 10px;
+    background-color: white;
+}
+/*------------------*/
+
+.single-download-container{
+    padding: 20px;
+}
+.input-container{
+    display: flex;
+    margin-bottom: 10px;
+}
+.input-text-container{
+    width: 50%;
+
+}
+.select-container{
+    width: 50%;
+}
+.input-text-container input{
+    width: 70%;
+}
+
+.button-container{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    /*text-align: center;*/
+}
+
+.playlist-download-container {
+    padding-left: 50px;
+}
+
+.playlist-content {
+    width: 580px;
+}
+
+.playlist-content ul {
+    padding-left: 0;
+    /*border: 1px solid black;*/
+    background-color: rgba(151, 150, 150, 0.3);
+}
+
+.playlist-content ul li {
+    border-bottom: 1px solid black;
+    margin: 10px 0;
+    display: flex;
+}
+
+.right-column {
+    width: 50%;
+    text-align: center;
+}
+
+.left-column {
+
+    width: 50%;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.playlist-content ul li input {
+    margin-left: 50px;
+    margin-top: 10px;
+    width: 70px;
+    /*display: inline;*/
+}
+
+.playlist-content ul li a {
+    color: black;
+}
+
+.download-button {
+
+    background-color: #006666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+}
+
+.download-button-1 {
+    /*margin-left: 120px;*/
+    margin-bottom: 15px;
+    background-color: #006666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+}
+
+.single-download-box {
+    margin-left: 150px;
+}
+
+.active {
+    background-color: rgb(50, 50, 50);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.message{
+
+}
