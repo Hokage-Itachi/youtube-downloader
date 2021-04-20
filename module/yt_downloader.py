@@ -78,3 +78,17 @@ def download(yt, resolution):
     os.remove("video/audio.mp4")
 
     return output_path
+
+
+def get_playlist_videos(playlist_url):
+    playlist = Playlist(playlist_url)
+    if (not playlist):
+        print("Playlist not exist")
+        return None
+    videos = playlist.videos
+
+    if (not videos):
+        print("Playlist has no video")
+        return None
+
+    return playlist.videos
