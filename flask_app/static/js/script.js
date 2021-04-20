@@ -54,7 +54,7 @@ function openTab(tabID) {
 }
 
 function getPlayListVideos() {
-    let playlist_url = document.getElementById("playlist_link").value;
+    let playlist_url = document.getElementById("playlist_url").value;
     if (!playlist_url) {
         return
     }
@@ -65,7 +65,7 @@ function getPlayListVideos() {
         if (this.readyState == 4 && this.status == 200) {
             console.log("Here");
             document.getElementById("playlist_container_message").innerHTML = "";
-            let playlist_videos = document.getElementById("playlist_video");
+            let playlist_videos = document.getElementById("playlist_videos");
 
             resp_arr = JSON.parse(this.responseText);
             for (let i = 0; i < resp_arr.length; i++) {
@@ -76,7 +76,7 @@ function getPlayListVideos() {
                 let list = document.createElement("li");
 
                 setupListItem(list, video_url, res_list, title);
-                // console.log(i, res_list[0]);
+                // console.log(i, res_list);
                 if (res_list.length < min_length_resolution_list) {
                     min_length_resolution_list = res_list.length;
                 }
@@ -90,18 +90,16 @@ function getPlayListVideos() {
             // select_res.setAttribute("name", "resolution");
             let res_list = resp_arr[0]["resolutions"];
             let index = res_list.length - min_length_resolution_list;
-            // console.log(res_list)
-            // console.log(res_list.length, min_length_resolution_list, res_list[min_length_resolution_list - 1]);
+            // console.log(res_list, index);
+            document.getElementById("form_playlist_url").value = playlist_url;
+            let select_res = document.getElementById("playlist_resolution")
+            for (let j = index; j < res_list.length; j++) {
+                let option = document.createElement("option");
+                option.text = res_list[j];
+                option.value = res_list[j];
 
-            document.getElementById("general_resolution").value = res_list[index];
-            document.getElementById("playlist_url").value = playlist_url;
-            // for (let j = 0; j < min_length_resolution_list; j++) {
-            //     let option = document.createElement("option");
-            //     option.text = res_list[j];
-            //     option.value = res_list[j];
-            //
-            //     select_res.add(option);
-            // }
+                select_res.add(option);
+            }
 
 
         } else if (this.status == 404) {
@@ -110,7 +108,7 @@ function getPlayListVideos() {
             document.getElementById("playlist_container_message").innerHTML = "Đợi trong giây lát...";
         }
     };
-    xhttp.open("POST", "/get_playlist_video", true);
+    xhttp.open("POST", "/get_playlist_videos", true);
     xhttp.send(playlist_url);
 
 
@@ -133,6 +131,12 @@ function setupListItem(list, video_url, res_list, title) {
     let right_column = document.createElement("div");
     right_column.setAttribute("class", "right-column");
 
+    let left_half_column = document.createElement("div");
+    left_half_column.setAttribute("class", "right-column-half");
+
+    let right_half_column = document.createElement("div");
+    right_half_column.setAttribute("class", "right-column-half");
+
     let select_res = document.createElement("select");
     select_res.setAttribute("name", "resolution");
 
@@ -140,33 +144,47 @@ function setupListItem(list, video_url, res_list, title) {
         let option = document.createElement("option");
         option.text = res_list[j];
         option.value = res_list[j];
-        if (j === Math.floor(res_list.length / 2)) {
-            option.setAttribute("selected", "True");
-        }
+
         select_res.add(option);
     }
 
     let form = document.createElement("form");
-    form.setAttribute("action", "/download");
+    form.setAttribute("action", "/video_download");
     form.setAttribute("method", "POST");
 
     let video_url_input = document.createElement("input");
     video_url_input.setAttribute("type", "hidden");
     video_url_input.setAttribute("value", video_url);
-    video_url_input.setAttribute("name", "link");
+    video_url_input.setAttribute("name", "playlist_url");
 
     let submit_btn = document.createElement("input");
     submit_btn.setAttribute("class", "download-button");
     submit_btn.setAttribute("type", "submit");
     submit_btn.setAttribute("value", "Tải xuống");
+    submit_btn.style.marginTop = "0";
 
-    form.appendChild(select_res);
-    form.appendChild(video_url_input);
-    form.appendChild(submit_btn);
+    left_half_column.appendChild(select_res);
+    right_half_column.appendChild(video_url_input);
+    right_half_column.appendChild(submit_btn);
+    form.appendChild(left_half_column);
+    form.appendChild(right_half_column);
+    // form.appendChild(submit_btn);
 
     right_column.appendChild(form);
 
     list.appendChild(left_column);
     list.appendChild(right_column);
 
+
+}
+
+function update_resolution_selection(){
+    let list_option = document.getElementById("playlist_resolution").options;
+    for (let i = 0; i < list_option.length; i++){
+        let option = list_option[i];
+        if(option.selected){
+            document.getElementById("form_playlist_resolution").value = option.value;
+            break;
+        }
+    }
 }
