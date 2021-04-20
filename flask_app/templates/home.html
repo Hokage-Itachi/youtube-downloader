@@ -26,12 +26,12 @@
     </div>
     <div class="download-container">
         <div class="single-download-container" id="single_download_container">
-            <form>
+            <form action="/video_download" method="POST">
                 <div class="input-container">
                     <div class="input-text-container">
                         <label for="video_url">Nhập link video</label>
                         <br>
-                        <input type="text" id="video_url" name="url" onchange="getResolution()" required>
+                        <input type="text" id="video_url" name="video_url" onchange="getResolution()" required>
                     </div>
                     <div class="select-container">
                         <label for="res">Chất lượng</label>
