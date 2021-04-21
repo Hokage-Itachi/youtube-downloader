@@ -52,41 +52,41 @@
             </form>
 
         </div>
-        <div class="playlist-download-container" id="playlist_download_container"hidden>
+        <div class="playlist-download-container" id="playlist_download_container" hidden>
             <div class="input-container">
                 <div class="input-text-container">
                     <label for="playlist_url">Nhập playlist url</label>
                     <br>
-                    <input type="text" id="playlist_url" name="video_url" onchange="getPlayListVideos()">
+                    <input type="text" id="playlist_url" onchange="getPlayListVideos()">
                 </div>
                 <div class="select-container">
-                    <label for="playlist_resolution">Chất lượng chung</label>
+                    <label for="playlist_general_resolution">Chất lượng chung</label>
                     <br>
-                    <select id="playlist_resolution" name="resolution">
+                    <select id="playlist_general_resolution" onchange="update_resolution_selection()">
 
                     </select>
                 </div>
             </div>
             <div class="playlist-content-container">
                 <ul id="playlist_videos">
-<!--                    <li>-->
-<!--                        <div class="left-column">-->
-<!--                            <a href="#" title="Tên bài hát">Tên video</a>-->
-<!--                        </div>-->
-<!--                        <div class="right-column">-->
-<!--                            <form>-->
-<!--                                <div class="right-column-half">-->
-<!--                                    <select id="resolution" name="resolution">-->
+                    <!--                    <li>-->
+                    <!--                        <div class="left-column">-->
+                    <!--                            <a href="#" title="Tên bài hát">Tên video</a>-->
+                    <!--                        </div>-->
+                    <!--                        <div class="right-column">-->
+                    <!--                            <form>-->
+                    <!--                                <div class="right-column-half">-->
+                    <!--                                    <select id="resolution" name="resolution">-->
 
-<!--                                </select>-->
-<!--                                </div>-->
-<!--                                <div class="right-column-half">-->
-<!--                                    <input class="download-button" type="submit" value="Tải xuống">-->
-<!--                                </div>-->
+                    <!--                                </select>-->
+                    <!--                                </div>-->
+                    <!--                                <div class="right-column-half">-->
+                    <!--                                    <input class="download-button" type="submit" value="Tải xuống">-->
+                    <!--                                </div>-->
 
-<!--                            </form>-->
-<!--                        </div>-->
-<!--                    </li>-->
+                    <!--                            </form>-->
+                    <!--                        </div>-->
+                    <!--                    </li>-->
                 </ul>
             </div>
             <div class="button-container" style="text-align: center">
@@ -97,14 +97,45 @@
                 </form>
             </div>
             <div class="message-container" style="text-align: center">
-                <p id="playlist_container_message"></p>
+                <p id="playlist_message"></p>
             </div>
         </div>
-        <div class="channel-download-container" id="channel_download_container">
+        <div class="channel-download-container" id="channel_download_container" hidden>
+            <div class="input-container">
+                <div class="input-text-container">
+                    <label for="channel_url">Nhập playlist url</label>
+                    <br>
+                    <input type="text" id="channel_url" onchange="getPlayListVideos()">
+                </div>
+                <div class="select-container">
+                    <label for="general_resolution">Chất lượng chung</label>
+                    <br>
+                    <select id="general_channel_resolution" >
 
+                    </select>
+                </div>
+            </div>
+            <div class="playlist-content-container">
+                <ul id="videos">
+
+                </ul>
+            </div>
+            <div class="button-container" style="text-align: center">
+                <form action="#" method="POST">
+                    <input class="download-button" type="submit" value="Tải xuống tất cả">
+                    <input type="hidden" name="channel_url" id="form_channel_url">
+                    <input type="hidden" name="channel_resolution" id="form_channel_resolution">
+                </form>
+            </div>
+            <div class="message-container" style="text-align: center">
+                <p id="channel_message"></p>
+            </div>
         </div>
 
+
     </div>
+
+</div>
 </div>
 <script>
 
