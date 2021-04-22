@@ -17,7 +17,10 @@ def download():
         resolution = request.form["resolution"]
         yt = ytd.get_youtube_object(url)
 
-        output_path = "../" + ytd.download(yt, resolution)
+        output_file = ytd.download(yt, resolution)
+        if (not output_file):
+            output_file = spf.video_not_available_file(yt.title, resolution)
+        output_path = "../" + output_file
         return send_file(output_path, as_attachment=True)
     else:
         return redirect(url_for('home'))
@@ -70,13 +73,12 @@ def playlist_download():
 
     list_video = []
     for video in playlist_videos:
-        video_file = spf.video_has_exist(video.title)
-        if (video_file):
-            list_video.append(video_file)
-        else:
-            list_video.append(ytd.download(video, resolution))
+        output_file = ytd.download(video, resolution)
+        if (not output_file):
+            output_file = spf.video_not_available_file(video.title, resolution)
+        list_video.append(output_file)
 
-    zip_file = "../" + spf.to_zip_file(list_video)
+    zip_file = "../" + spf.to_zip_file(list_video, "playlist.zip")
 
     return send_file(zip_file, as_attachment=True)
 
@@ -102,6 +104,25 @@ def get_channel_video():
         )
 
     return jsonify(data)
+
+
+@app.route("/channel_download", methods=["POST"])
+def channel_download():
+    pattern = "[\[\] ]"
+    replace = ""
+    channel_videos_url = spf.string_formatter(pattern, replace, request.form["channel_videos_url"]).split(",")
+    channel_gennerl_resolution = request.form["channel_general_resolution"]
+    list_video = []
+    for url in channel_videos_url:
+        video = ytd.get_youtube_object(url)
+        output_file = ytd.download(video, channel_gennerl_resolution)
+        if (not output_file):
+            output_file = spf.video_not_available_file(video.title, channel_gennerl_resolution)
+        list_video.append(output_file)
+
+    zip_file = "../" + spf.to_zip_file(list_video, "channel.zip")
+
+    return send_file(zip_file, as_attachment=True)
 
 
 @app.route("/test")

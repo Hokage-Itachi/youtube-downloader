@@ -1,26 +1,28 @@
 import re
 import os
 from zipfile import ZipFile
-from requests_html import AsyncHTMLSession, HTMLSession
+from requests_html import HTMLSession
 from bs4 import BeautifulSoup as bs
 import asyncio
-from module.fix_html_session import FixedHTMLSession
 
 
 def title_formatter(title):
-    title = re.sub("[!@#$%\^&*()<>/?`~\'\" ]", "-", title)
-    return title
+    pattern = "[!@#$%\^&*()<>/?`~.\'\" ]"
+    replace = "-"
+
+    return string_formatter(pattern, replace, title)
 
 
-def video_has_exist(title):
+def video_has_exist(title, resolution):
     title = title_formatter(title) + ".mp4"
-    if title in os.listdir("video"):
-        return "video/" + title
+    video_dir = "video/" + resolution
+    if title in os.listdir(video_dir):
+        return video_dir + "/" + title
     return None
 
 
-def to_zip_file(list_video):
-    zip_path = "zip/playlist.zip"
+def to_zip_file(list_video, filename):
+    zip_path = "zip/" + filename
     zip_obj = ZipFile(zip_path, "w")
 
     for video in list_video:
@@ -76,4 +78,12 @@ def get_request_response(channel_url):
         return response
 
 
+def string_formatter(pattern, replace, input_string):
+    return re.sub(pattern, replace, input_string)
 
+
+def video_not_available_file(title, resolution):
+    filename = "txt/" + title + ".txt"
+    f = open(filename, 'w', encoding="utf-8")
+    f.write("Video \"" + title + "\" không còn hỗ trợ độ phân giải " + resolution)
+    return filename

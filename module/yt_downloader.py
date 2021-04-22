@@ -1,3 +1,4 @@
+import pytube.exceptions
 from pytube import YouTube, Playlist
 from pytube.exceptions import VideoUnavailable
 import subprocess
@@ -18,8 +19,9 @@ def get_highest_resolution_stream(yt):
     return yt.streams.get_highest_resolution()
 
 
-def get_by_resolution(yt, resolution):
-    return yt.streams.get_by_resolution(resolution)
+def get_available_video(yt):
+    videos = yt.streams.filter(progressive=True)
+    return videos
 
 
 def get_video_stream(yt, resolution):
@@ -66,11 +68,26 @@ def get_possible_resolution(yt):
 
 def download(yt, resolution):
     video_stream = get_video_stream(yt, resolution)
-    audio_stream = get_audio_stream(yt, "128kbps")
-    download_stream(video_stream, "video", "video")
-    download_stream(audio_stream, "video", "audio")
+    video_file = spf.video_has_exist(yt.title, resolution)
+    path = "video/" + resolution + "/"
+
+    if (video_file):
+        return video_file
+
     title = spf.title_formatter(yt.title)
-    output_path = "video/" + title + ".mp4"
+
+    if (video_stream in get_available_video(yt)):
+        video_stream.download(path, title)
+        return path + title + ".mp4"
+
+    audio_stream = get_audio_stream(yt, "128kbps")
+    try:
+        download_stream(video_stream, "video", "video")
+    except pytube.exceptions.MaxRetriesExceeded as e:
+        print(e)
+        return None
+    download_stream(audio_stream, "video", "audio")
+    output_path = path + title + ".mp4"
     combine_video_audio("video/video.mp4", "video/audio.mp4",
                         output_path)
 
