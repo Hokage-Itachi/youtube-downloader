@@ -190,6 +190,6 @@ i {
     border-top-right-radius: 10px;
 }
 
-.message {
-
+.channel-download-container {
+    padding: 20px 50px;
 }
