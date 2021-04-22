@@ -64,7 +64,7 @@ function getPlayListVideos() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log("Here");
-            document.getElementById("playlist_container_message").innerHTML = "";
+            document.getElementById("playlist_message").innerHTML = "";
             let playlist_videos = document.getElementById("playlist_videos");
 
             resp_arr = JSON.parse(this.responseText);
@@ -103,9 +103,9 @@ function getPlayListVideos() {
 
 
         } else if (this.status == 404) {
-            document.getElementById("playlist_container_message").innerHTML = "Playlist không tồn tại hoặc không có video";
+            document.getElementById("playlist_message").innerHTML = "Playlist không tồn tại hoặc không có video";
         } else {
-            document.getElementById("playlist_container_message").innerHTML = "Đợi trong giây lát...";
+            document.getElementById("playlist_message").innerHTML = "Đợi trong giây lát...";
         }
     };
     xhttp.open("POST", "/get_playlist_videos", true);
