@@ -62,7 +62,8 @@
                 <div class="select-container">
                     <label for="playlist_general_resolution">Chất lượng chung</label>
                     <br>
-                    <select id="playlist_general_resolution" onchange="update_resolution_selection()">
+                    <select id="playlist_general_resolution"
+                            onchange="update_resolution_selection('playlist_general_resolution', 'form_playlist_resolution')">
 
                     </select>
                 </div>
@@ -103,20 +104,21 @@
         <div class="channel-download-container" id="channel_download_container" hidden>
             <div class="input-container">
                 <div class="input-text-container">
-                    <label for="channel_url">Nhập playlist url</label>
+                    <label for="channel_url">Nhập channel url</label>
                     <br>
-                    <input type="text" id="channel_url" onchange="getPlayListVideos()">
+                    <input type="text" id="channel_url" onchange="getChannelVideo()">
                 </div>
                 <div class="select-container">
-                    <label for="general_resolution">Chất lượng chung</label>
+                    <label for="channel_general_resolution">Chất lượng chung</label>
                     <br>
-                    <select id="general_channel_resolution" >
+                    <select id="channel_general_resolution"
+                            onchange="update_resolution_selection('playlist_channel_resolution', 'form_channel_resolution')">
 
                     </select>
                 </div>
             </div>
             <div class="playlist-content-container">
-                <ul id="videos">
+                <ul id="channel_videos">
 
                 </ul>
             </div>

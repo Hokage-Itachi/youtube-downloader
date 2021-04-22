@@ -67,16 +67,13 @@ function getPlayListVideos() {
             document.getElementById("playlist_message").innerHTML = "";
             let resp_arr = JSON.parse(this.responseText);
             let min_length_resolution_list = setupUlItem("playlist_videos", resp_arr);
-             // let select_res = document.createElement("select");
-            // select_res.setAttribute("name", "resolution");
 
-            // console.log(res_list, index);
             document.getElementById("form_playlist_url").value = playlist_url;
             setupSelectItem("playlist_general_resolution", resp_arr[0]["resolutions"], min_length_resolution_list);
 
 
         } else if (this.status == 404) {
-            document.getElementById("playlist_message").innerHTML = "Playlist không tồn tại hoặc không có video";
+            document.getElementById("playlist_message").innerHTML = "Channel không tồn tại hoặc không có video";
         } else {
             document.getElementById("playlist_message").innerHTML = "Đợi trong giây lát...";
         }
@@ -85,6 +82,35 @@ function getPlayListVideos() {
     xhttp.send(playlist_url);
 
 
+}
+
+function getChannelVideo(){
+    let channel_url = document.getElementById("channel_url").value;
+    if (!channel_url) {
+        return
+    }
+
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log("Here");
+            document.getElementById("channel_message").innerHTML = "";
+            let resp_arr = JSON.parse(this.responseText);
+            let min_length_resolution_list = setupUlItem("channel_videos", resp_arr);
+
+            document.getElementById("form_channel_url").value = playlist_url;
+            setupSelectItem("channel_general_resolution", resp_arr[0]["resolutions"], min_length_resolution_list);
+
+
+        } else if (this.status == 404) {
+            document.getElementById("channel_message").innerHTML = "Channel không tồn tại hoặc không có video";
+        } else {
+            document.getElementById("channel_message").innerHTML = "Đợi trong giây lát...";
+        }
+    };
+    xhttp.open("POST", "/get_channel_videos", true);
+    xhttp.send(channel_url);
 }
 
 function setupListItem(list, video_url, res_list, title) {
@@ -151,12 +177,12 @@ function setupListItem(list, video_url, res_list, title) {
 
 }
 
-function update_resolution_selection() {
-    let list_option = document.getElementById("playlist_resolution").options;
+function update_resolution_selection(select_id, input_id) {
+    let list_option = document.getElementById(select_id).options;
     for (let i = 0; i < list_option.length; i++) {
         let option = list_option[i];
         if (option.selected) {
-            document.getElementById("form_playlist_resolution").value = option.value;
+            document.getElementById(input_id).value = option.value;
             break;
         }
     }
