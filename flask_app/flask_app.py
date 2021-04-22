@@ -79,3 +79,35 @@ def playlist_download():
     zip_file = "../" + spf.to_zip_file(list_video)
 
     return send_file(zip_file, as_attachment=True)
+
+
+@app.route("/get_channel_videos", methods=["POST"])
+def get_channel_video():
+    channel_url = request.get_data().decode("utf-8")
+    videos_url = spf.crawl_youtube_html(channel_url)
+
+    data = []
+    for url in videos_url:
+        video = ytd.get_youtube_object(url)
+
+        title = spf.title_formatter(video.title)
+        available_resolutions = ytd.get_possible_resolution(video)
+
+        data.append(
+            {
+                "url": url,
+                "title": title,
+                "resolutions": available_resolutions
+            }
+        )
+
+    return jsonify(data)
+
+
+@app.route("/test")
+def test():
+    import requests
+
+    response = requests.get("https://www.youtube.com/channel/UCWkdXRJdvjT9TvXHx5FFx9g/videos")
+
+    return response.text
