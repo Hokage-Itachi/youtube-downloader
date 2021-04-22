@@ -104,9 +104,9 @@
         <div class="channel-download-container" id="channel_download_container" hidden>
             <div class="input-container">
                 <div class="input-text-container">
-                    <label for="channel_url">Nhập channel url</label>
+                    <label for="channel_url">Nhập channel url ( giới hạn 30 video )</label>
                     <br>
-                    <input type="text" id="channel_url" onchange="getChannelVideo()">
+                    <input type="text" id="channel_url" onchange="getChannelVideo()" style="width: 90%">
                 </div>
                 <div class="select-container">
                     <label for="channel_general_resolution">Chất lượng chung</label>
@@ -123,10 +123,10 @@
                 </ul>
             </div>
             <div class="button-container" style="text-align: center">
-                <form action="#" method="POST">
+                <form action="/channel_download" method="POST">
                     <input class="download-button" type="submit" value="Tải xuống tất cả">
-                    <input type="hidden" name="channel_url" id="form_channel_url">
-                    <input type="hidden" name="channel_resolution" id="form_channel_resolution">
+                    <input type="hidden" name="channel_videos_url" id="form_channel_url">
+                    <input type="hidden" name="channel_general_resolution" id="form_channel_resolution">
                 </form>
             </div>
             <div class="message-container" style="text-align: center">

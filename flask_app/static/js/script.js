@@ -99,7 +99,7 @@ function getChannelVideo(){
             let resp_arr = JSON.parse(this.responseText);
             let min_length_resolution_list = setupUlItem("channel_videos", resp_arr);
 
-            document.getElementById("form_channel_url").value = playlist_url;
+            document.getElementById("form_channel_url").value = setupChannelVideosURL(resp_arr);
             setupSelectItem("channel_general_resolution", resp_arr[0]["resolutions"], min_length_resolution_list);
 
 
@@ -154,7 +154,7 @@ function setupListItem(list, video_url, res_list, title) {
     let video_url_input = document.createElement("input");
     video_url_input.setAttribute("type", "hidden");
     video_url_input.setAttribute("value", video_url);
-    video_url_input.setAttribute("name", "playlist_url");
+    video_url_input.setAttribute("name", "video_url");
 
     let submit_btn = document.createElement("input");
     submit_btn.setAttribute("class", "download-button");
@@ -223,4 +223,13 @@ function setupUlItem(ul_id, resp_arr) {
     return min_length_resolution_list;
 
 
+}
+
+function setupChannelVideosURL(response_data){
+    videos_url = [];
+    for (let i = 0; i < response_data.length; i++){
+        videos_url.push(response_data[i]['url']);
+    }
+
+    return videos_url;
 }
