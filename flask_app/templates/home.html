@@ -59,42 +59,17 @@
                     <br>
                     <input type="text" id="playlist_url" onchange="getPlayListVideos()">
                 </div>
-                <div class="select-container">
-                    <label for="playlist_general_resolution">Chất lượng chung</label>
-                    <br>
-                    <select id="playlist_general_resolution"
-                            onchange="update_resolution_selection('playlist_general_resolution', 'form_playlist_resolution')">
-
-                    </select>
-                </div>
             </div>
             <div class="playlist-content-container">
                 <ul id="playlist_videos">
-                    <!--                    <li>-->
-                    <!--                        <div class="left-column">-->
-                    <!--                            <a href="#" title="Tên bài hát">Tên video</a>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="right-column">-->
-                    <!--                            <form>-->
-                    <!--                                <div class="right-column-half">-->
-                    <!--                                    <select id="resolution" name="resolution">-->
 
-                    <!--                                </select>-->
-                    <!--                                </div>-->
-                    <!--                                <div class="right-column-half">-->
-                    <!--                                    <input class="download-button" type="submit" value="Tải xuống">-->
-                    <!--                                </div>-->
-
-                    <!--                            </form>-->
-                    <!--                        </div>-->
-                    <!--                    </li>-->
                 </ul>
             </div>
             <div class="button-container" style="text-align: center">
                 <form action="/playlist_download" method="POST">
-                    <input class="download-button" type="submit" value="Tải xuống tất cả">
-                    <input type="hidden" name="playlist_url" id="form_playlist_url">
-                    <input type="hidden" name="resolution" id="form_playlist_resolution">
+                    <input class="download-button" type="submit" value="Tải xuống tất cả" onclick="getListResolution('form_playlist_resolution', 'playlist_videos')">
+                    <input type="hidden" name="playlist_urls" id="form_playlist_url">
+                    <input type="hidden" name="playlist_resolutions" id="form_playlist_resolution">
                 </form>
             </div>
             <div class="message-container" style="text-align: center">

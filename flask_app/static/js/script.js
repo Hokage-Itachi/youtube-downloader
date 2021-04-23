@@ -1,5 +1,5 @@
 function getResolution() {
-    var xhttp = new XMLHttpRequest();
+    let xhttp = new XMLHttpRequest();
     let url = document.getElementById("video_url").value;
     if (!url) {
         return
@@ -10,13 +10,7 @@ function getResolution() {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("message").innerHTML = "";
             resp_arr = JSON.parse(this.responseText);
-            for (let i = 0; i < resp_arr.length; i++) {
-                var option = document.createElement("option");
-                option.text = resp_arr[i];
-                option.value = resp_arr[i];
-                select_res.add(option);
-            }
-
+            setupSelectItem(select_res, resp_arr);
         } else {
             document.getElementById("message").innerHTML = "Đợi trong giây lát...";
         }
@@ -58,7 +52,7 @@ function getPlayListVideos() {
     if (!playlist_url) {
         return
     }
-
+    document.getElementById("playlist_videos").innerHTML = "";
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function () {
@@ -66,10 +60,9 @@ function getPlayListVideos() {
             // console.log("Here");
             document.getElementById("playlist_message").innerHTML = "";
             let resp_arr = JSON.parse(this.responseText);
-            let min_length_resolution_list = setupUlItem("playlist_videos", resp_arr);
+            setupUlItem("playlist_videos", resp_arr);
 
-            document.getElementById("form_playlist_url").value = playlist_url;
-            setupSelectItem("playlist_general_resolution", resp_arr[0]["resolutions"], min_length_resolution_list);
+            document.getElementById("form_playlist_url").value = setupVideosURL(resp_arr);
 
 
         } else if (this.status == 404) {
@@ -84,7 +77,7 @@ function getPlayListVideos() {
 
 }
 
-function getChannelVideo(){
+function getChannelVideo() {
     let channel_url = document.getElementById("channel_url").value;
     if (!channel_url) {
         return
@@ -97,10 +90,9 @@ function getChannelVideo(){
             // console.log("Here");
             document.getElementById("channel_message").innerHTML = "";
             let resp_arr = JSON.parse(this.responseText);
-            let min_length_resolution_list = setupUlItem("channel_videos", resp_arr);
+            setupUlItem("channel_videos", resp_arr);
 
-            document.getElementById("form_channel_url").value = setupChannelVideosURL(resp_arr);
-            setupSelectItem("channel_general_resolution", resp_arr[0]["resolutions"], min_length_resolution_list);
+            document.getElementById("form_channel_url").value = setupVideosURL(resp_arr);
 
 
         } else if (this.status == 404) {
@@ -139,13 +131,7 @@ function setupListItem(list, video_url, res_list, title) {
     let select_res = document.createElement("select");
     select_res.setAttribute("name", "resolution");
 
-    for (let j = 0; j < res_list.length; j++) {
-        let option = document.createElement("option");
-        option.text = res_list[j];
-        option.value = res_list[j];
-
-        select_res.add(option);
-    }
+    setupSelectItem(select_res, res_list)
 
     let form = document.createElement("form");
     form.setAttribute("action", "/video_download");
@@ -188,22 +174,22 @@ function update_resolution_selection(select_id, input_id) {
     }
 }
 
-function setupSelectItem(select_id, res_list, min_length_resolution_list) {
+function setupSelectItem(select, res_list) {
 
-    let index = res_list.length - min_length_resolution_list;
-    let select_res = document.getElementById(select_id)
-    for (let j = index; j < res_list.length; j++) {
+    for (let j = 0; j < res_list.length; j++) {
         let option = document.createElement("option");
         option.text = res_list[j];
         option.value = res_list[j];
-
-        select_res.add(option);
+        if (j === 0) {
+            option.selected = true;
+        }
+        select.add(option);
     }
+
 }
 
 function setupUlItem(ul_id, resp_arr) {
     let playlist_videos = document.getElementById(ul_id);
-    let min_length_resolution_list = 100;
     for (let i = 0; i < resp_arr.length; i++) {
         let title = resp_arr[i]["title"];
         let video_url = resp_arr[i]['url'];
@@ -212,24 +198,31 @@ function setupUlItem(ul_id, resp_arr) {
         let list = document.createElement("li");
 
         setupListItem(list, video_url, res_list, title);
-        // console.log(i, res_list);
-        if (res_list.length < min_length_resolution_list) {
-            min_length_resolution_list = res_list.length;
-        }
 
         playlist_videos.appendChild(list);
     }
 
-    return min_length_resolution_list;
-
 
 }
 
-function setupChannelVideosURL(response_data){
+function setupVideosURL(response_data) {
     videos_url = [];
-    for (let i = 0; i < response_data.length; i++){
+    for (let i = 0; i < response_data.length; i++) {
         videos_url.push(response_data[i]['url']);
     }
 
     return videos_url;
 }
+
+function getListResolution(input_id, ui_id) {
+    let res_list = [];
+    let ul = document.getElementById(ui_id);
+    let select_list = ul.querySelectorAll("select");
+
+    for (let i = 0; i < select_list.length; i++) {
+        res_list.push(select_list[i].value);
+    }
+
+    document.getElementById(input_id).value = res_list;
+}
+
