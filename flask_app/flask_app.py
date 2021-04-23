@@ -66,13 +66,13 @@ def get_playlist_videos():
 
 @app.route("/playlist_download", methods=["POST"])
 def playlist_download():
-    playlist_url = request.form["playlist_url"]
-    resolution = request.form['resolution']
-
-    playlist_videos = ytd.get_playlist_videos(playlist_url)
+    playlist_urls = spf.data_formatter(request.form["playlist_urls"])
+    resolutions = spf.data_formatter(request.form['playlist_resolutions'])
 
     list_video = []
-    for video in playlist_videos:
+    for i in range(len(playlist_urls)):
+        video = ytd.get_youtube_object(playlist_urls[i])
+        resolution = resolutions[i]
         output_file = ytd.download(video, resolution)
         if (not output_file):
             output_file = spf.video_not_available_file(video.title, resolution)
