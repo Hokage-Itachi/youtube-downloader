@@ -163,17 +163,6 @@ function setupListItem(list, video_url, res_list, title) {
 
 }
 
-function update_resolution_selection(select_id, input_id) {
-    let list_option = document.getElementById(select_id).options;
-    for (let i = 0; i < list_option.length; i++) {
-        let option = list_option[i];
-        if (option.selected) {
-            document.getElementById(input_id).value = option.value;
-            break;
-        }
-    }
-}
-
 function setupSelectItem(select, res_list) {
 
     for (let j = 0; j < res_list.length; j++) {
