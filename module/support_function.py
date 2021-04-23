@@ -87,3 +87,9 @@ def video_not_available_file(title, resolution):
     f = open(filename, 'w', encoding="utf-8")
     f.write("Video \"" + title + "\" không còn hỗ trợ độ phân giải " + resolution)
     return filename
+
+
+def data_formatter(data):
+    pattern = "[\[\] ]"
+    replace = ""
+    return string_formatter(pattern, replace, data).split(",")
