@@ -1,8 +1,12 @@
+import urllib.error
+
+import pytube.exceptions
 from pytube import YouTube, Playlist
 from pytube.exceptions import VideoUnavailable
 import subprocess
 import module.support_function as spf
 import os
+import urllib.request as rq
 
 
 def get_youtube_object(url):
@@ -18,8 +22,9 @@ def get_highest_resolution_stream(yt):
     return yt.streams.get_highest_resolution()
 
 
-def get_by_resolution(yt, resolution):
-    return yt.streams.get_by_resolution(resolution)
+def get_available_video(yt):
+    videos = yt.streams.filter(progressive=True)
+    return videos
 
 
 def get_video_stream(yt, resolution):
@@ -45,32 +50,42 @@ def download_stream(stream, location, filename=""):
 
 
 def get_possible_resolution(yt):
-    res_list = ["2160p", "1440p", "1080p", "720p", "480p", "360p", "240p", "144p"]
+    res_list = []
     # s = time.time()
-    streams = yt.streams
-    index = 0
+    streams = yt.streams.filter(mime_type="video/mp4")
+    # print(streams)
     for stream in streams:
-        if (stream.is_progressive):
-            index += 1
-        else:
-            break
-    highest_resolution_stream = streams[index]
-    # print(highest_resolution_stream)
-    # print(time.time() - s)
-    highest_resolution = highest_resolution_stream.resolution
-    i = res_list.index(highest_resolution)
-    for j in range(i):
-        res_list.remove(res_list[0])
+        # stream = stream.first()
+        if not stream.is_progressive:
+            if is_stream_exist(stream):
+                if stream.resolution and stream.resolution not in res_list:
+                    res_list.append(stream.resolution)
+
     return res_list
 
 
 def download(yt, resolution):
     video_stream = get_video_stream(yt, resolution)
-    audio_stream = get_audio_stream(yt, "128kbps")
-    download_stream(video_stream, "video", "video")
-    download_stream(audio_stream, "video", "audio")
+    video_file = spf.video_has_exist(yt.title, resolution)
+    path = "video/" + resolution + "/"
+
+    if video_file:
+        return video_file
+
     title = spf.title_formatter(yt.title)
-    output_path = "video/" + title + ".mp4"
+
+    if video_stream in get_available_video(yt):
+        video_stream.download(path, title)
+        return path + title + ".mp4"
+
+    audio_stream = get_audio_stream(yt, "128kbps")
+    try:
+        download_stream(video_stream, "video", "video")
+    except pytube.exceptions.MaxRetriesExceeded as e:
+        print(e)
+        return None
+    download_stream(audio_stream, "video", "audio")
+    output_path = path + title + ".mp4"
     combine_video_audio("video/video.mp4", "video/audio.mp4",
                         output_path)
 
@@ -82,13 +97,25 @@ def download(yt, resolution):
 
 def get_playlist_videos(playlist_url):
     playlist = Playlist(playlist_url)
-    if (not playlist):
+    if not playlist:
         print("Playlist not exist")
         return None
     videos = playlist.videos
 
-    if (not videos):
+    if not videos:
         print("Playlist has no video")
         return None
 
     return playlist.videos
+
+
+def is_stream_exist(stream):
+    try:
+        response = rq.urlopen(stream.url)
+    except urllib.error.HTTPError as e:
+        print(e, "for", stream)
+        print(stream.url)
+        return False
+
+    if response:
+        return True

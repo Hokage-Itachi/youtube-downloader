@@ -17,7 +17,10 @@ def download():
         resolution = request.form["resolution"]
         yt = ytd.get_youtube_object(url)
 
-        output_path = "../" + ytd.download(yt, resolution)
+        output_file = ytd.download(yt, resolution)
+        if (not output_file):
+            output_file = spf.video_not_available_file(yt.title, resolution)
+        output_path = "../" + output_file
         return send_file(output_path, as_attachment=True)
     else:
         return redirect(url_for('home'))
@@ -63,19 +66,56 @@ def get_playlist_videos():
 
 @app.route("/playlist_download", methods=["POST"])
 def playlist_download():
-    playlist_url = request.form["playlist_url"]
-    resolution = request.form['resolution']
+    playlist_urls = spf.data_formatter(request.form["playlist_urls"])
+    resolutions = spf.data_formatter(request.form['playlist_resolutions'])
 
-    playlist_videos = ytd.get_playlist_videos(playlist_url)
-
-    list_video = []
-    for video in playlist_videos:
-        video_file = spf.video_has_exist(video.title)
-        if (video_file):
-            list_video.append(video_file)
-        else:
-            list_video.append(ytd.download(video, resolution))
-
-    zip_file = "../" + spf.to_zip_file(list_video)
+    zip_file = zip_data(playlist_urls, resolutions, "playlist.zip")
 
     return send_file(zip_file, as_attachment=True)
+
+
+@app.route("/get_channel_videos", methods=["POST"])
+def get_channel_video():
+    channel_url = request.get_data().decode("utf-8")
+    videos_url = spf.crawl_youtube_html(channel_url)
+
+    data = []
+    for url in videos_url:
+        video = ytd.get_youtube_object(url)
+
+        title = spf.title_formatter(video.title)
+        available_resolutions = ytd.get_possible_resolution(video)
+
+        data.append(
+            {
+                "url": url,
+                "title": title,
+                "resolutions": available_resolutions
+            }
+        )
+
+    return jsonify(data)
+
+
+@app.route("/channel_download", methods=["POST"])
+def channel_download():
+    channel_videos_url = spf.data_formatter(request.form["channel_videos_url"])
+    channel_resolutions = spf.data_formatter(request.form["channel_resolutions"])
+
+    zip_file = zip_data(channel_videos_url, channel_resolutions, "channel.zip")
+
+    return send_file(zip_file, as_attachment=True)
+
+
+def zip_data(list_url, list_resoluiton, filename):
+    list_video = []
+    for i in range(len(list_url)):
+        video = ytd.get_youtube_object(list_url[i])
+        resolution = list_resoluiton[i]
+        output_file = ytd.download(video, resolution)
+        if (not output_file):
+            output_file = spf.video_not_available_file(video.title, resolution)
+        list_video.append(output_file)
+
+    zip_file = "../" + spf.to_zip_file(list_video, filename)
+    return zip_file

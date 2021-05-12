@@ -88,7 +88,7 @@ i {
 }
 
 .input-text-container {
-    width: 50%;
+    width: 100%;
 
 }
 
@@ -190,6 +190,6 @@ i {
     border-top-right-radius: 10px;
 }
 
-.message {
-
+.channel-download-container {
+    padding: 20px 50px;
 }
