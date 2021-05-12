@@ -69,6 +69,7 @@ function getPlayListVideos() {
             let resp_arr = JSON.parse(this.responseText);
             setupUlItem("playlist_videos", resp_arr);
 
+
             document.getElementById("form_playlist_url").value = setupVideosURL(resp_arr);
 
 
@@ -111,9 +112,11 @@ function getChannelVideo() {
 
 
         } else if (this.status == 404) {
+
             document.getElementById("channel_message").innerHTML = "Channel không tồn tại hoặc không có video";
         } else {
             document.getElementById("channel_message").innerHTML = "Đợi trong giây lát...";
+
         }
     };
     xhttp.open("POST", "/get_channel_videos", true);
