@@ -56,9 +56,9 @@ def get_possible_resolution(yt):
     # print(streams)
     for stream in streams:
         # stream = stream.first()
-        if (not stream.is_progressive):
-            if (is_stream_exist(stream)):
-                if (stream.resolution not in res_list):
+        if not stream.is_progressive:
+            if is_stream_exist(stream):
+                if stream.resolution and stream.resolution not in res_list:
                     res_list.append(stream.resolution)
 
     return res_list
@@ -69,12 +69,12 @@ def download(yt, resolution):
     video_file = spf.video_has_exist(yt.title, resolution)
     path = "video/" + resolution + "/"
 
-    if (video_file):
+    if video_file:
         return video_file
 
     title = spf.title_formatter(yt.title)
 
-    if (video_stream in get_available_video(yt)):
+    if video_stream in get_available_video(yt):
         video_stream.download(path, title)
         return path + title + ".mp4"
 
@@ -97,12 +97,12 @@ def download(yt, resolution):
 
 def get_playlist_videos(playlist_url):
     playlist = Playlist(playlist_url)
-    if (not playlist):
+    if not playlist:
         print("Playlist not exist")
         return None
     videos = playlist.videos
 
-    if (not videos):
+    if not videos:
         print("Playlist has no video")
         return None
 
@@ -114,7 +114,8 @@ def is_stream_exist(stream):
         response = rq.urlopen(stream.url)
     except urllib.error.HTTPError as e:
         print(e, "for", stream)
+        print(stream.url)
         return False
 
-    if (response):
+    if response:
         return True

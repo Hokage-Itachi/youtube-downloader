@@ -2,14 +2,18 @@ function getResolution() {
     let xhttp = new XMLHttpRequest();
     let url = document.getElementById("video_url").value;
     if (!url) {
-        return
+        return;
+    }
+    if (!validate_input(url, "watch")) {
+        return;
     }
     let select_res = document.getElementById("resolution");
     select_res.options.length = 0;
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("message").innerHTML = "";
-            resp_arr = JSON.parse(this.responseText);
+            let resp_arr = JSON.parse(this.responseText);
+            // console.log(resp_arr);
             setupSelectItem(select_res, resp_arr);
         } else {
             document.getElementById("message").innerHTML = "Đợi trong giây lát...";
@@ -52,6 +56,9 @@ function getPlayListVideos() {
     if (!playlist_url) {
         return
     }
+    if (!validate_input(playlist_url, "playlist")) {
+        return
+    }
     document.getElementById("playlist_videos").innerHTML = "";
     var xhttp = new XMLHttpRequest();
 
@@ -80,9 +87,17 @@ function getPlayListVideos() {
 function getChannelVideo() {
     let channel_url = document.getElementById("channel_url").value;
     if (!channel_url) {
-        return
+        alert("Hãy nhập channel link.");
+        return;
     }
-
+    let result = validate_input(channel_url, "channel");
+    if (result === false) {
+        alert("Link channel không đúng.")
+        return;
+    } else if (result !== true) {
+        channel_url = result;
+    }
+    document.getElementById("channel_videos").innerHTML = "";
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function () {
@@ -178,7 +193,7 @@ function setupSelectItem(select, res_list) {
 }
 
 function setupUlItem(ul_id, resp_arr) {
-    let playlist_videos = document.getElementById(ul_id);
+    let list_videos = document.getElementById(ul_id);
     for (let i = 0; i < resp_arr.length; i++) {
         let title = resp_arr[i]["title"];
         let video_url = resp_arr[i]['url'];
@@ -188,7 +203,7 @@ function setupUlItem(ul_id, resp_arr) {
 
         setupListItem(list, video_url, res_list, title);
 
-        playlist_videos.appendChild(list);
+        list_videos.appendChild(list);
     }
 
 
@@ -215,3 +230,27 @@ function getListResolution(input_id, ui_id) {
     document.getElementById(input_id).value = res_list;
 }
 
+function validate_input(string, type) {
+    let arr = string.split("/");
+    let protocol = arr[0];
+    let domain = arr[2];
+    let action = arr[3];
+    let hostname = protocol + "//" + domain + "/";
+    if (hostname !== "https://www.youtube.com/") {
+        return false;
+    }
+
+    if (action.split("?")[0] === type) {
+        return true;
+    }
+
+    if (action === "channel" || action === "c") {
+        if (arr[5] === "videos") {
+            return true;
+        } else if (!arr[5]) {
+            // alert("Here")
+            return string + "/videos";
+        }
+        return false;
+    }
+}
